@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { CheckCircle2, Lock, PlayCircle } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
+import { calcularDesbloqueo } from '@/lib/progreso/desbloqueo'
 
 export default async function CursoPage({
   params,
@@ -31,30 +32,27 @@ export default async function CursoPage({
     (progreso ?? []).map((p) => [p.modulo_id, p.estado])
   )
 
-  // Desbloqueo progresivo: un módulo está desbloqueado si es el primero o el
-  // anterior está aprobado.
-  let anteriorAprobado = true
+  const estados = calcularDesbloqueo(
+    modulos.map((m) => ({ id: m.id, estado: estadoPorModulo.get(m.id) ?? 'no_iniciado' }))
+  )
+  const estadoIdx = new Map(estados.map((e) => [e.id, e]))
 
   return (
     <section className="flex flex-col gap-3">
       <h1 className="text-xl font-bold">{curso.titulo}</h1>
       {modulos.map((m) => {
-        const estado = estadoPorModulo.get(m.id) ?? 'no_iniciado'
-        const aprobado = estado === 'aprobado'
-        const desbloqueado = anteriorAprobado
-        anteriorAprobado = aprobado // para el siguiente del loop
-
-        const Icono = aprobado ? CheckCircle2 : desbloqueado ? PlayCircle : Lock
+        const e = estadoIdx.get(m.id)!
+        const Icono = e.aprobado ? CheckCircle2 : e.desbloqueado ? PlayCircle : Lock
         const inner = (
           <div className="flex items-center gap-3 rounded-xl border border-[var(--cafe)]/15 bg-white p-4">
-            <Icono size={22} className={aprobado ? 'text-green-600' : 'opacity-70'} />
+            <Icono size={22} className={e.aprobado ? 'text-green-600' : 'opacity-70'} />
             <div>
               <p className="text-xs opacity-60">Módulo {m.numero}</p>
               <p className="font-medium">{m.titulo}</p>
             </div>
           </div>
         )
-        return desbloqueado ? (
+        return e.desbloqueado ? (
           <Link key={m.id} href={`/modulo/${m.slug}`}>{inner}</Link>
         ) : (
           <div key={m.id} className="opacity-50">{inner}</div>
