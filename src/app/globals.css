@@ -1,0 +1,10 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+:root {
+  --cafe: #4a2c2a;
+  --crema: #f3e9dc;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+body { @apply bg-[var(--crema)] text-[var(--cafe)] antialiased; }
