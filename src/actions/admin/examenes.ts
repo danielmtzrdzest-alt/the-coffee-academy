@@ -35,7 +35,8 @@ export async function guardarExamen(input: ExamenInput): Promise<void> {
   const supabase = await createClient()
 
   // Borrar y recrear (las opciones caen por ON DELETE CASCADE de pregunta_id).
-  await supabase.from('lms_preguntas').delete().eq('modulo_id', d.moduloId)
+  const { error: errBorrar } = await supabase.from('lms_preguntas').delete().eq('modulo_id', d.moduloId)
+  if (errBorrar) throw new Error(errBorrar.message)
 
   for (let i = 0; i < d.preguntas.length; i++) {
     const p = d.preguntas[i]
