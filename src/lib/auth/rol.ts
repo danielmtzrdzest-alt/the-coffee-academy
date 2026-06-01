@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { createClient } from '@/lib/supabase/server'
 
 export type Rol = 'barista' | 'gerente' | 'admin'
@@ -7,7 +8,7 @@ export interface SesionRol {
   rol: Rol
 }
 
-export async function obtenerSesionRol(): Promise<SesionRol | null> {
+export const obtenerSesionRol = cache(async (): Promise<SesionRol | null> => {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return null
@@ -18,7 +19,7 @@ export async function obtenerSesionRol(): Promise<SesionRol | null> {
     .single()
   if (!data) return null
   return { userId: user.id, rol: data.rol as Rol }
-}
+})
 
 export function esStaff(rol: Rol): boolean {
   return rol === 'gerente' || rol === 'admin'
