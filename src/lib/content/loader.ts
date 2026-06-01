@@ -5,17 +5,10 @@ export interface ModuloParseado {
   contenidoMd: string
 }
 
+import { slugify } from '@/lib/slug'
+
 const RE_TITULO_MODULO = /^#\s+Módulo\s+\d+\s*[—-]\s*(.+)$/m
 const RE_H1 = /^#\s+(.+)$/m
-
-function slugify(texto: string): string {
-  return texto
-    .normalize('NFD')
-    .replace(/\p{Diacritic}/gu, '') // quita acentos (ASCII-safe en el fuente)
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '')
-}
 
 export function parsearModulo(md: string, numeroStr: string): ModuloParseado {
   const numero = Number(numeroStr)
