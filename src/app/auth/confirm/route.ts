@@ -11,7 +11,15 @@ export async function GET(request: NextRequest) {
     const supabase = await createClient()
     const { error } = await supabase.auth.verifyOtp({ type, token_hash })
     if (!error) {
-      return NextResponse.redirect(new URL('/cursos', request.url))
+      const { data: { user } } = await supabase.auth.getUser()
+      const { data: perfil } = await supabase
+        .from('lms_perfiles')
+        .select('rol')
+        .eq('id', user?.id ?? '')
+        .single()
+      const destino =
+        perfil && (perfil.rol === 'gerente' || perfil.rol === 'admin') ? '/admin' : '/cursos'
+      return NextResponse.redirect(new URL(destino, request.url))
     }
   }
   return NextResponse.redirect(new URL('/login', request.url))
