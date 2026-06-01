@@ -35,6 +35,7 @@ export async function crearModulo(input: ModuloInput): Promise<{ id: string }> {
     .select('id')
     .single()
   if (error) throw new Error(error.message)
+  if (!data) throw new Error('No se creó el módulo')
 
   revalidatePath(`/admin/cursos/${d.cursoId}`)
   return { id: data.id }
