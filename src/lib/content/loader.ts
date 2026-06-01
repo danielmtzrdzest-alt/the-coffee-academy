@@ -1,11 +1,11 @@
+import { slugify } from '@/lib/slug'
+
 export interface ModuloParseado {
   numero: number
   titulo: string
   slug: string
   contenidoMd: string
 }
-
-import { slugify } from '@/lib/slug'
 
 const RE_TITULO_MODULO = /^#\s+Módulo\s+\d+\s*[—-]\s*(.+)$/m
 const RE_H1 = /^#\s+(.+)$/m
