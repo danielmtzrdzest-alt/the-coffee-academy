@@ -29,7 +29,11 @@ export async function crearBarista(input: BaristaInput): Promise<{ perfilId: str
     userId = creado.user.id
   }
 
-  // 2. Perfil LMS (barista).
+  // 2. Perfil LMS (barista). No degradar a un usuario staff existente.
+  const { data: perfilExistente } = await admin.from('lms_perfiles').select('rol').eq('id', userId).single()
+  if (perfilExistente && perfilExistente.rol !== 'barista') {
+    throw new Error(`El usuario ya existe con rol '${perfilExistente.rol}'.`)
+  }
   const { error: errPerfil } = await admin.from('lms_perfiles').upsert(
     { id: userId, nombre: d.nombre, rol: 'barista', sucursal_id: d.sucursalId },
     { onConflict: 'id' }
@@ -44,7 +48,9 @@ export async function crearBarista(input: BaristaInput): Promise<{ perfilId: str
     options: { redirectTo: `${origen}${REDIRECT}` },
   })
   if (errLink) throw new Error(errLink.message)
-  const enlace = `${origen}${REDIRECT}?token_hash=${link.properties?.hashed_token}&type=magiclink`
+  const tokenHash = link.properties?.hashed_token
+  if (!tokenHash) throw new Error('No se generó el token del enlace.')
+  const enlace = `${origen}${REDIRECT}?token_hash=${tokenHash}&type=magiclink`
 
   revalidatePath('/admin/personas')
   return { perfilId: userId, enlace }
