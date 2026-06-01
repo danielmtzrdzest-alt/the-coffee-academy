@@ -14,6 +14,7 @@ export function BaristaForm({ sucursales }: { sucursales: { id: number; nombre: 
   async function enviar(e: React.FormEvent) {
     e.preventDefault()
     setEnviando(true)
+    setEnlace(null)
     try {
       const r = await crearBarista({ nombre, correo, sucursalId })
       setEnlace(r.enlace)
@@ -50,7 +51,7 @@ export function BaristaForm({ sucursales }: { sucursales: { id: number; nombre: 
         <div className="flex flex-col gap-2 rounded-xl border border-[var(--cafe)]/15 bg-white p-3">
           <p className="text-sm font-medium">Enlace de acceso (compártelo con el barista):</p>
           <code className="break-all rounded bg-[var(--cafe)]/5 p-2 text-xs">{enlace}</code>
-          <button onClick={() => { navigator.clipboard.writeText(enlace); toast.success('Copiado') }}
+          <button onClick={() => navigator.clipboard.writeText(enlace).then(() => toast.success('Copiado'), () => toast.error('No se pudo copiar'))}
             className="self-start rounded border border-[var(--cafe)]/30 px-3 py-1 text-xs">Copiar</button>
         </div>
       )}
