@@ -36,22 +36,22 @@ export function CursoForm({ id, inicial }: { id?: string; inicial?: CursoInput }
 
   return (
     <form onSubmit={guardar} className="flex max-w-lg flex-col gap-3">
-      <label className="text-sm">Título</label>
-      <input required value={v.titulo} onChange={(e) => setV({ ...v, titulo: e.target.value })}
+      <label htmlFor="titulo" className="text-sm">Título</label>
+      <input id="titulo" required value={v.titulo} onChange={(e) => setV({ ...v, titulo: e.target.value })}
         className="rounded border border-[var(--cafe)]/30 p-2" />
 
-      <label className="text-sm">Descripción</label>
-      <textarea value={v.descripcion} onChange={(e) => setV({ ...v, descripcion: e.target.value })}
+      <label htmlFor="descripcion" className="text-sm">Descripción</label>
+      <textarea id="descripcion" value={v.descripcion} onChange={(e) => setV({ ...v, descripcion: e.target.value })}
         className="rounded border border-[var(--cafe)]/30 p-2" rows={2} />
 
-      <label className="text-sm">Nivel</label>
-      <select value={v.nivel} onChange={(e) => setV({ ...v, nivel: e.target.value as CursoInput['nivel'] })}
+      <label htmlFor="nivel" className="text-sm">Nivel</label>
+      <select id="nivel" value={v.nivel} onChange={(e) => setV({ ...v, nivel: e.target.value as CursoInput['nivel'] })}
         className="rounded border border-[var(--cafe)]/30 p-2">
         {NIVELES.map((n) => <option key={n} value={n}>{n}</option>)}
       </select>
 
-      <label className="text-sm">Orden</label>
-      <input type="number" value={v.orden} onChange={(e) => setV({ ...v, orden: Number(e.target.value) })}
+      <label htmlFor="orden" className="text-sm">Orden</label>
+      <input id="orden" type="number" value={v.orden} onChange={(e) => setV({ ...v, orden: Number(e.target.value) })}
         className="rounded border border-[var(--cafe)]/30 p-2" />
 
       <label className="flex items-center gap-2 text-sm">
