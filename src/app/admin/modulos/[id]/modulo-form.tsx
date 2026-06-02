@@ -8,6 +8,7 @@ import remarkGfm from 'remark-gfm'
 import { toast } from 'sonner'
 import { crearModulo, actualizarModulo } from '@/actions/admin/modulos'
 import type { ModuloInput } from '@/lib/admin/schemas'
+import { SubirPodcast } from './subir-podcast'
 
 export function ModuloForm({ id, cursoId, inicial }: { id?: string; cursoId: string; inicial?: ModuloInput }) {
   const router = useRouter()
@@ -54,6 +55,7 @@ export function ModuloForm({ id, cursoId, inicial }: { id?: string; cursoId: str
       <label htmlFor="podcastUrl" className="text-sm">URL del podcast (opcional)</label>
       <input id="podcastUrl" type="url" value={v.podcastUrl} onChange={(e) => setV({ ...v, podcastUrl: e.target.value })}
         placeholder="https://…" className="rounded border border-[var(--cafe)]/30 p-2" />
+      <SubirPodcast value={v.podcastUrl} onChange={(url) => setV({ ...v, podcastUrl: url })} />
 
       <label htmlFor="examenMinAprob" className="text-sm">Mínimo para aprobar (%)</label>
       <input id="examenMinAprob" type="number" min={0} max={100} value={v.examenMinAprob}
