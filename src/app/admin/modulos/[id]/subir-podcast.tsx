@@ -56,7 +56,9 @@ export function SubirPodcast({
 
   return (
     <div className="flex flex-col gap-2">
+      <label htmlFor="subirPodcast" className="text-sm">O subir un archivo de audio</label>
       <input
+        id="subirPodcast"
         type="file"
         accept="audio/*"
         disabled={estado === 'subiendo'}
